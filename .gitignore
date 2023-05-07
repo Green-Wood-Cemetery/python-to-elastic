@@ -160,5 +160,6 @@ cython_debug/
 # mine
 /logs/*.csv
 /excel/*.xlsx
+/json/*.json
 /sqlite
 .DS_Store

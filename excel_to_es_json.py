@@ -124,7 +124,7 @@ new_cols = [
     "has_diagram",
 ]
 
-if args.file and os.path.splitext(args.file)[1].lower() == "xlsx":
+if args.file and os.path.splitext(args.file)[1].lower() == ".xlsx":
     df = pd.read_excel(args.file, names=new_cols, usecols="A:CZ", keep_default_na=False)
 else:
     sys.exit("Please indicate input file or url.")
