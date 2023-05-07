@@ -1,23 +1,36 @@
+import os
 import requests
 import demjson3
 import json
 import argparse
 import logging
 import time
+import sys
 
 # Creates an argument parser object with two arguments:
-# -index and -vol.
+# -index and -file.
 # Then configures the logging module to create a log file with
 # the index name and volume number.
 
 parser = argparse.ArgumentParser(description="Compares Elasticsearch JSON with Elasticsearch INDEX")
 parser.add_argument("-index", type=str, help="ES Index")
-parser.add_argument("-vol", type=int, help="Volume to be cleaned")
+parser.add_argument("-file", type=str, help="File with the data to be cleaned")
 args = parser.parse_args()
+
+if args.file:
+    if os.path.splitext(args.file)[1].lower() != ".json":
+        sys.exit(0)
+else:
+    sys.exit("Please indicate input file.")
+
+if args.file:
+    volume = int(args.file.split("-")[2])
+else:
+    volume = 99
 
 timestr = time.strftime("%Y%m%d-%H%M%S")
 logging.basicConfig(
-    filename="logs/clean-data-" + str(args.index) + "-" + str(args.vol) + "-" + timestr + ".csv",
+    filename="logs/clean-data-" + str(args.index) + "-" + str(volume) + "-" + timestr + ".csv",
     filemode="a",
     format="%(message)s",
     level=logging.DEBUG,
@@ -50,10 +63,10 @@ total_records = 0
 
 print("Starting process to Clean the index...")
 print(f"Index: {args.index}")
-print(f"Volume: {args.vol}")
+print(f"Volume: {volume}")
 
 try:
-    payload = demjson3.encode({"query": {"term": {"registry_volume": args.vol}}})
+    payload = demjson3.encode({"query": {"term": {"registry_volume": volume}}})
     response = requests.post(url, data=payload, headers=headers)
     parsed = json.loads(response.text)
 
@@ -72,3 +85,5 @@ try:
         logging.error("The volume was not found inside the index.")
 except:
     pass
+
+sys.exit(0)

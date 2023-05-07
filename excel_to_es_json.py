@@ -354,7 +354,7 @@ for i in es_dict:
 # dump and print json
 json_string = json.dumps(parsed_data, indent=2, sort_keys=False, cls=DateTimeEncoder)
 
-with open(os.path.join("json", f"greenwood_vol_{volume}.json"), "w", encoding="utf_8") as fw:
+with open(os.path.join("json", f"greenwood-volume-{volume}.json"), "w", encoding="utf_8") as fw:
     fw.write(json_string)
 
 sys.exit(0)

@@ -4,6 +4,7 @@ import json
 import argparse
 import logging
 import time
+import sys
 
 parser = argparse.ArgumentParser(description="Compares Elasticsearch JSON with Elasticsearch INDEX")
 parser.add_argument("-file", type=str, help="ES JSON file")
@@ -120,3 +121,5 @@ if len(file_data) > 0:
 else:
     logging.info("The process has finished because the file is empty.")
     print("File is empty or does not exist. See logs for error...")
+
+sys.exit(0)
