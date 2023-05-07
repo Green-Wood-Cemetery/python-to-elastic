@@ -24,7 +24,7 @@ else:
     sys.exit("Please indicate input file.")
 
 if args.file:
-    volume = int(args.file.split("-")[2])
+    volume = int(args.file.split("-")[2].replace(".json", ""))
 else:
     volume = 99
 
