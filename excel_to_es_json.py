@@ -353,3 +353,5 @@ json_string = json.dumps(parsed_data, indent=2, sort_keys=False, cls=DateTimeEnc
 
 with open(os.path.join("json", f"greenwood_vol_{volume}.json"), "w", encoding="utf_8") as fw:
     fw.write(json_string)
+
+sys.exit(0)
