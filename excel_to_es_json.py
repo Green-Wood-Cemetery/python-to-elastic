@@ -16,22 +16,6 @@ parser.add_argument("-file", type=str, help="spreadsheet file")
 parser.add_argument("--geocode", action=argparse.BooleanOptionalAction, help="process geocoded locations")
 args = parser.parse_args()
 
-if args.file and os.path.splitext(args.file)[1].lower() == "xlsx":
-    df = pd.read_excel(args.file, names=new_cols, usecols="A:CZ", keep_default_na=False)
-else:
-    sys.exit("Please indicate input file or url.")
-
-if args.file:
-    volume = int(args.file.split("_")[1])
-else:
-    volume = 99
-
-# logging config
-timestr = time.strftime("%Y%m%d-%H%M%S")
-logging.basicConfig(
-    filename="logs/excel_to_es-volume-" + str(volume) + "-" + timestr + ".csv", filemode="a", format="%(message)s"
-)
-
 # rename excel column headings to elasticsearch json values
 new_cols = [
     "interment_id",
@@ -139,6 +123,22 @@ new_cols = [
     "burial_origin",
     "has_diagram",
 ]
+
+if args.file and os.path.splitext(args.file)[1].lower() == "xlsx":
+    df = pd.read_excel(args.file, names=new_cols, usecols="A:CZ", keep_default_na=False)
+else:
+    sys.exit("Please indicate input file or url.")
+
+if args.file:
+    volume = int(args.file.split("_")[1])
+else:
+    volume = 99
+
+# logging config
+timestr = time.strftime("%Y%m%d-%H%M%S")
+logging.basicConfig(
+    filename="logs/excel_to_es-volume-" + str(volume) + "-" + timestr + ".csv", filemode="a", format="%(message)s"
+)
 
 # replace NaN with empty string
 df = df.fillna("")
