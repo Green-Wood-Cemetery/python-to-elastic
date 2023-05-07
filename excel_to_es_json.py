@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import os
 import pandas as pd
 import json
 import ast
@@ -11,20 +12,20 @@ import logging
 import time
 
 parser = argparse.ArgumentParser(description="Converts XLSX to Elasticsearch JSON")
-parser.add_argument("-url", type=str, help="spreadsheet url")
 parser.add_argument("-file", type=str, help="spreadsheet file")
-parser.add_argument("-vol", type=int, help="registry volume number")
 parser.add_argument("--geocode", action=argparse.BooleanOptionalAction, help="process geocoded locations")
 args = parser.parse_args()
 
+if args.file:
+    volume = int(args.file.split("_")[1])
+else:
+    volume = 99
 
 # logging config
 timestr = time.strftime("%Y%m%d-%H%M%S")
 logging.basicConfig(
-    filename="logs/excel_to_es-volume-" + str(args.vol) + "-" + timestr + ".csv", filemode="a", format="%(message)s"
+    filename="logs/excel_to_es-volume-" + str(volume) + "-" + timestr + ".csv", filemode="a", format="%(message)s"
 )
-
-volume = args.vol
 
 # rename excel column headings to elasticsearch json values
 new_cols = [
@@ -134,9 +135,7 @@ new_cols = [
     "has_diagram",
 ]
 
-if args.url:
-    df = pd.read_excel(args.url, names=new_cols, usecols="A:CZ", keep_default_na=False)
-elif args.file:
+if args.file and os.path.splitext(args.file).lower() == "xlsx":
     df = pd.read_excel(args.file, names=new_cols, usecols="A:CZ", keep_default_na=False)
 else:
     sys.exit("Please indicate input file or url.")
